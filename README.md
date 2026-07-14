@@ -34,6 +34,7 @@ Update installed skills later with `npx skills update`.
 | **swe** | [`skills/swe/SKILL.md`](skills/swe/SKILL.md) | Software-engineering standards for implementation, debugging, refactoring, testing, code review, dependencies, migrations, documentation, and Git workflows. |
 | **compose** | [`skills/compose/SKILL.md`](skills/compose/SKILL.md) | Docker Compose stacks with collision-resistant high host ports, project-named networks, project-prefixed volumes (host-global unique), wiring dependency ports into app config, and high free ports for host-run app HTTP + Vite (e.g. Laravel `APP_URL` / `SERVER_PORT` / `VITE_PORT`). |
 | **defrag** | [`skills/defrag/SKILL.md`](skills/defrag/SKILL.md) | OS-agnostic host health + hygiene: discover platform/version, assess signals (disk, SMART, memory, load, firmware/RAM profiles, services), map cleanup avenues, measure, and prune safely. Not disk defragmentation. |
+| **reduce** | [`skills/reduce/SKILL.md`](skills/reduce/SKILL.md) | Finds unnecessary seams for safe, low-risk reduction (practical DRY)—duplicated logic, redundant wrappers, parallel paths—without changing functionality. |
 
 ## Layout
 
@@ -43,14 +44,16 @@ skills/
 │   └── SKILL.md   # swe
 ├── compose/
 │   └── SKILL.md   # compose
-└── defrag/
-    ├── SKILL.md   # defrag
-    └── references/
-        ├── health.md    # healthy vs unhealthy signals
-        ├── linux.md
-        ├── macos.md
-        ├── windows.md
-        └── devtools.md
+├── defrag/
+│   ├── SKILL.md   # defrag
+│   └── references/
+│       ├── health.md    # healthy vs unhealthy signals
+│       ├── linux.md
+│       ├── macos.md
+│       ├── windows.md
+│       └── devtools.md
+└── reduce/
+    └── SKILL.md   # reduce
 ```
 
 Each skill lives under `skills/<name>/SKILL.md` with YAML frontmatter (`name`, `description`, `metadata`) for Agent Skills-compatible coding agents.
