@@ -1,13 +1,13 @@
 ---
-name: modoterra-swe
-description: Applies Modoterra's software-engineering standards to implementation, debugging, refactoring, testing, code review, dependency work, migrations, documentation, and Git workflows. Use for any task that reads, changes, validates, reviews, or commits software in a repository.
+name: swe
+description: Applies software-engineering standards to implementation, debugging, refactoring, testing, code review, dependency work, migrations, documentation, and Git workflows. Use for any task that reads, changes, validates, reviews, or commits software in a repository, or when the user runs /swe.
 compatibility: Designed for Agent Skills-compatible coding agents. Requires repository tools appropriate to the project.
 metadata:
   author: Modoterra
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
-# Modoterra SWE
+# SWE
 
 Apply these standards whenever performing software-engineering work.
 

@@ -31,17 +31,26 @@ Update installed skills later with `npx skills update`.
 
 | Skill | Path | Description |
 |-------|------|-------------|
-| **modoterra-swe** | [`skills/swe/SKILL.md`](skills/swe/SKILL.md) | Modoterra software-engineering standards for implementation, debugging, refactoring, testing, code review, dependencies, migrations, documentation, and Git workflows. |
-| **compose** | [`skills/compose/SKILL.md`](skills/compose/SKILL.md) | Docker Compose stacks with collision-resistant high host ports, project-named networks, service-named volumes, and wiring those ports into app config (e.g. Laravel `.env`). |
+| **swe** | [`skills/swe/SKILL.md`](skills/swe/SKILL.md) | Software-engineering standards for implementation, debugging, refactoring, testing, code review, dependencies, migrations, documentation, and Git workflows. |
+| **compose** | [`skills/compose/SKILL.md`](skills/compose/SKILL.md) | Docker Compose stacks with collision-resistant high host ports, project-named networks, project-prefixed volumes (host-global unique), and wiring those ports into app config (e.g. Laravel `.env`). |
+| **defrag** | [`skills/defrag/SKILL.md`](skills/defrag/SKILL.md) | OS-agnostic host health + hygiene: discover platform/version, assess signals (disk, SMART, memory, load, firmware/RAM profiles, services), map cleanup avenues, measure, and prune safely. Not disk defragmentation. |
 
 ## Layout
 
 ```
 skills/
 ├── swe/
-│   └── SKILL.md   # modoterra-swe
-└── compose/
-    └── SKILL.md   # compose
+│   └── SKILL.md   # swe
+├── compose/
+│   └── SKILL.md   # compose
+└── defrag/
+    ├── SKILL.md   # defrag
+    └── references/
+        ├── health.md    # healthy vs unhealthy signals
+        ├── linux.md
+        ├── macos.md
+        ├── windows.md
+        └── devtools.md
 ```
 
 Each skill lives under `skills/<name>/SKILL.md` with YAML frontmatter (`name`, `description`, `metadata`) for Agent Skills-compatible coding agents.

@@ -2,14 +2,14 @@
 name: compose
 description: >
   Generate or normalize Docker Compose stacks with collision-resistant high host ports,
-  project-named networks, and service-named volumes, then wire those ports into the
-  current project's config (e.g. Laravel .env). Use when the user wants compose services,
-  docker-compose, randomized ports, local infra (Postgres, Redis, Mailpit, MinIO, etc.),
-  or runs /compose.
+  project-named networks, and project-prefixed volumes (host-global unique), then wire
+  those ports into the current project's config (e.g. Laravel .env). Use when the user
+  wants compose services, docker-compose, randomized ports, local infra (Postgres, Redis,
+  Mailpit, MinIO, etc.), or runs /compose.
 compatibility: Designed for Agent Skills-compatible coding agents. Requires Docker Compose and shell access to inspect listening ports.
 metadata:
   author: Modoterra
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Compose
@@ -19,7 +19,7 @@ Build local Docker Compose infrastructure that is safe to run alongside other pr
 ## Goals
 
 1. Map requested services to **randomized high host ports** so collisions with other stacks are rare.
-2. **Normalize names**: network = project name; each volume = the service it belongs to (not `project_service`).
+2. **Normalize names**: network Docker name = project name (not `project_default`); volume Docker names = `{project}_{service}` because volume names are **unique across the entire Docker host**.
 3. **Wire host ports** into the current application config (`.env`, etc.) so the app talks to those ports on `127.0.0.1`.
 
 ## When to run
@@ -110,7 +110,9 @@ Attach services to `default` (implicit) unless multi-network is required.
 
 ### Volumes
 
-For each named volume, set the Docker volume **name** to the **service name** that owns it (not `project_postgres`):
+Docker volume names are **global on the host** (not scoped per Compose project). Two stacks that both declare `name: postgres` will collide or share data unintentionally.
+
+For each named volume, set the Docker volume **name** to `{project}_{service}`:
 
 ```yaml
 services:
@@ -120,14 +122,16 @@ services:
 
 volumes:
   postgres_data:
-    name: postgres
+    name: myapp_postgres
 ```
 
 Rules:
 
-- One primary data volume per stateful service → external name = service name (`postgres`, `redis`, `minio`).
-- If a service needs multiple volumes, name the primary after the service; secondary volumes use `service-purpose` (e.g. `minio-config`) and set `name:` accordingly.
+- One primary data volume per stateful service → `name: {project}_{service}` (e.g. `myapp_postgres`, `myapp_redis`, `myapp_minio`).
+- If a service needs multiple volumes, primary uses `{project}_{service}`; secondary uses `{project}_{service}_{purpose}` (e.g. `myapp_minio_config`).
+- Compose volume **keys** (left of `volumes:` under the service) may stay short (`postgres_data`); only the explicit `name:` field must be host-unique.
 - Prefer named volumes over bind mounts for database data unless the user or repo already uses binds.
+- Never use bare service names (`postgres`) as the Docker volume `name:` on a multi-project host.
 
 ### Service names
 
@@ -159,7 +163,7 @@ networks:
 
 volumes:
   <volume_key>:
-    name: <service>
+    name: <project>_<service>
 ```
 
 ### Service defaults (reference)
@@ -264,13 +268,14 @@ Always finish with a short table and file list, for example:
 | redis    | `127.0.0.1:60102` → 6379  | `REDIS_PORT=60102` in `.env` |
 
 Network: `myapp`  
-Volumes: `postgres`, `redis`  
+Volumes: `myapp_postgres`, `myapp_redis`  
 Files: `compose.yaml`, `.env`
 
 ## Constraints
 
 - Do not expose Compose services on `0.0.0.0` by default.
 - Do not use low/fixed host ports for multi-project hosts.
-- Do not name networks or volumes with a redundant `project_` prefix.
+- Do not use bare service names as Docker volume `name:` values — always prefix with `{project}_` so volumes stay unique on the host.
+- Network Docker name stays the bare project name (not `project_default`); that is intentional and separate from volume naming.
 - Do not put the app on the Compose network by default unless the user wants a full containerized app (Sail-style); this skill targets **host-run apps + containerized dependencies**.
 - Prefer editing existing files over adding parallel compose variants (`docker-compose.dev.yml`, etc.) unless the repo already uses that pattern.
